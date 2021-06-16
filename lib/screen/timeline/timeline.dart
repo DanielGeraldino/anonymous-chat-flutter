@@ -1,4 +1,5 @@
 import 'package:anonymous_chat_flutter/core/cores_padroes.dart';
+import 'package:anonymous_chat_flutter/core/rota.dart';
 import 'package:anonymous_chat_flutter/screen/timeline/componente/app_bar.dart';
 import 'package:anonymous_chat_flutter/screen/timeline/componente/card_post.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,8 @@ class _TimelineAppState extends State<TimelineApp> {
               titulo: 'Neque porro quisquam est',
               subTitulo:
                   'dasdLorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a ex eget metus rutrum... ',
-              onPress: () {})
+              data: '27/08/2021',
+              onPress: () => Navigator.pushNamed(context, Rota.detalhePublica))
         ],
       ),
     );

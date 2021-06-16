@@ -1,9 +1,13 @@
-import 'package:anonymous_chat_flutter/screen/login/login.dart';
-import 'package:anonymous_chat_flutter/screen/timeline/timeline.dart';
 import 'package:flutter/material.dart';
+
+import 'core/rota.dart';
 
 main() => runApp(
       MaterialApp(
-        home: TimelineApp(),
+        initialRoute: Rota.splash,
+        routes: Rota.rotas,
+        onGenerateRoute: (config) {
+          print(config.name);
+        },
       ),
     );

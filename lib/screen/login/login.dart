@@ -1,3 +1,4 @@
+import 'package:anonymous_chat_flutter/core/rota.dart';
 import 'package:anonymous_chat_flutter/screen/login/componente/button_login.dart';
 import 'package:anonymous_chat_flutter/screen/login/componente/campo_input_login.dart';
 import 'package:anonymous_chat_flutter/screen/componentes/logo.dart';
@@ -36,7 +37,7 @@ class LoginApp extends StatelessWidget {
             ),
             ButtonLogin(
               title: 'ENTRAR',
-              onPress: () {},
+              onPress: () => Navigator.pushNamed(context, Rota.timeline),
             )
           ],
         ),

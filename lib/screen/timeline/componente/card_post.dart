@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class CardPost extends StatelessWidget {
   String titulo;
   String subTitulo;
+  String data;
   void Function() onPress;
 
   CardPost({
@@ -12,6 +13,7 @@ class CardPost extends StatelessWidget {
     @required this.titulo,
     @required this.subTitulo,
     @required this.onPress,
+    @required this.data,
   }) : super(key: key);
 
   @override
@@ -21,14 +23,24 @@ class CardPost extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: Text(
-              this.titulo,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                fontSize: TextPadrao.tituloCard,
-                fontWeight: FontWeight.bold,
-                color: Cores.textCard,
-              ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  this.titulo,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: TextPadrao.tituloCard,
+                    fontWeight: FontWeight.bold,
+                    color: Cores.textCard,
+                  ),
+                ),
+                Text(data,
+                    style: TextStyle(
+                        fontSize: TextPadrao.textoCard,
+                        fontWeight: FontWeight.bold,
+                        color: Cores.textCard))
+              ],
             ),
             subtitle: Text(
               this.subTitulo,

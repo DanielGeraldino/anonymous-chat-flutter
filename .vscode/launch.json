@@ -4,16 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "anonymous_chat_flutter",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "anonymous_chat_flutter (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        }
+        
     ]
 }

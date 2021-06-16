@@ -22,7 +22,7 @@ class AppBarTimeLine extends PreferredSize {
         color: Cores.backgroundAppBar,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           CircleAvatar(
             backgroundColor: Colors.transparent,
@@ -39,6 +39,13 @@ class AppBarTimeLine extends PreferredSize {
           Text(
             nameUser,
             style: TextStyle(fontSize: 20),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Icon(
+              Icons.exit_to_app_rounded,
+              color: Colors.red,
+            ),
           )
         ],
       ),
