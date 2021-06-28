@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class ButtonLogin extends StatelessWidget {
   void Function() onPress;
   String title;
+  Color cor = Cores.backgroundButton;
 
   ButtonLogin({
     Key key,
     this.onPress,
     this.title,
+    this.cor,
   }) : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class ButtonLogin extends StatelessWidget {
       height: 40,
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Cores.backgroundButton,
+        color: cor,
         borderRadius: BorderRadius.circular(5),
       ),
       child: ElevatedButton(

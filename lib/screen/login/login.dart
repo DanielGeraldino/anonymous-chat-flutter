@@ -38,6 +38,10 @@ class LoginApp extends StatelessWidget {
             ButtonLogin(
               title: 'ENTRAR',
               onPress: () => Navigator.pushNamed(context, Rota.timeline),
+            ),
+            ButtonLogin(
+              title: 'CADASTRAR',
+              onPress: () => Navigator.pushNamed(context, Rota.cadastro),
             )
           ],
         ),
