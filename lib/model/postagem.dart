@@ -6,7 +6,7 @@ class Postagem {
   String titulo;
   String descricao;
   int idUsuario;
-  String dataHora;
+  DateTime dataHora;
   bool ativa;
 
   Postagem({
@@ -25,7 +25,7 @@ class Postagem {
       descricao: parsedJson['descricao'],
       idUsuario: parsedJson['idUsuario'],
       ativa: parsedJson['ativa'],
-      dataHora: parsedJson['dataHoraPostagem'],
+      dataHora: DateTime.parse(parsedJson['dataHoraPostagem']),
     );
   }
 }

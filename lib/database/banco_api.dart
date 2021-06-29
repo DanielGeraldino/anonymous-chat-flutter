@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:anonymous_chat_flutter/model/comentario.dart';
 import 'package:anonymous_chat_flutter/model/postagem.dart';
+import 'package:anonymous_chat_flutter/model/usuario.dart';
 import 'package:http/http.dart' as http;
 
 class Api {
@@ -22,8 +24,8 @@ class Api {
     ).then((response) {
       print(response.body);
       if (response.statusCode == 200) {
-        var body = json.decode(response.body);
-        return body['status'];
+        var dados = json.decode(response.body);
+        return dados['status'] as bool;
       } else {
         print('Cadastrar erro: ${response.statusCode}');
         return false;
@@ -31,13 +33,14 @@ class Api {
     }).whenComplete(() => client.close());
   }
 
-  static Future<bool> autenticaUsuario(String nome, String senha) async {
+  static Future<Usuario> autenticaUsuario(String nome, String senha) async {
     var client = http.Client();
+    var usuario;
 
     await client.post(
-      Uri.parse('$host/api/Login'),
+      Uri.parse('$host/Login'),
       body: jsonEncode({
-        'name': nome,
+        'username': nome,
         'password': senha,
       }),
       headers: <String, String>{
@@ -46,16 +49,20 @@ class Api {
     ).then((response) {
       if (response.statusCode == 200) {
         var dados = json.decode(response.body);
-        return dados['status'];
+        if (dados['status'] as bool) {
+          usuario = Usuario.fromJson(dados['objectsReturn']);
+        }
+        usuario = null;
       } else {
         print('Erro login: ${response.statusCode}');
-        return false;
+        usuario = null;
       }
     }).whenComplete(() => client.close());
+
+    return usuario;
   }
 
-  static Future<bool> criarPostagem(
-      String titulo, String descricao, String idUsuario) async {
+  static Future<bool> criarPostagem(String descricao, String idUsuario) async {
     var client = http.Client();
     var foiPostado = false;
 
@@ -101,6 +108,10 @@ class Api {
         listaPostagemJson.forEach((postagem) {
           listaPostagem.add(Postagem.fromJson(postagem));
         });
+
+        listaPostagem.sort(
+          (a, b) => b.dataHora.compareTo(a.dataHora),
+        );
       } else {
         print('Erro retornarPostagem: ${response.statusCode}');
       }
@@ -109,5 +120,61 @@ class Api {
     });
 
     return listaPostagem;
+  }
+
+  static Future<List<Comentario>> retornaComenario(String idPostagem) async {
+    var client = http.Client();
+    List<Comentario> lista = [];
+
+    await client
+        .post(Uri.parse(
+            '$host/RetornarComentario?idPostagem=$idPostagem&pagina=1&quantidade=100'))
+        .then((response) {
+      if (response.statusCode == 200) {
+        var dados = json.decode(response.body);
+        var listaComentarioJson = dados['objectsReturn'] as List;
+
+        listaComentarioJson.forEach((comentario) {
+          lista.add(Comentario.fromJson(comentario));
+        });
+
+        lista.sort(
+          (a, b) => b.dataCriacao.compareTo(a.dataCriacao),
+        );
+      } else {
+        print('Erro retornaComentario: ${response.statusCode}');
+      }
+    }).whenComplete(() {
+      client.close();
+    });
+
+    return lista;
+  }
+
+  static Future<bool> criarComentario(
+      String descricao, String idPostagem) async {
+    var client = http.Client();
+    var foiPostado = false;
+
+    await client.post(
+      Uri.parse('$host/PostarComentario'),
+      body: jsonEncode({
+        "idPostagem": idPostagem,
+        "comentario": descricao,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    ).then((response) {
+      if (response.statusCode == 200) {
+        var dados = json.decode(response.body);
+        foiPostado = dados['status'];
+      } else {
+        print('Erro criarPostagem: ${response.statusCode}');
+        foiPostado = false;
+      }
+    }).whenComplete(() => client.close());
+
+    return foiPostado;
   }
 }

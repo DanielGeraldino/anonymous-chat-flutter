@@ -1,8 +1,9 @@
-import 'package:anonymous_chat_flutter/core/rota.dart';
 import 'package:anonymous_chat_flutter/screen/login/componente/button_login.dart';
 import 'package:anonymous_chat_flutter/screen/login/componente/campo_input_login.dart';
 import 'package:anonymous_chat_flutter/screen/componentes/logo.dart';
+import 'package:anonymous_chat_flutter/service/usuario_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../core/cores_padroes.dart';
 
 class LoginApp extends StatelessWidget {
@@ -37,11 +38,39 @@ class LoginApp extends StatelessWidget {
             ),
             ButtonLogin(
               title: 'ENTRAR',
-              onPress: () => Navigator.pushNamed(context, Rota.timeline),
+              onPress: () async {
+                var _nome = controleUsuario.text;
+                var _senha = controleSenha.text;
+                EasyLoading.show(status: 'Autenticando');
+                if (_nome.isNotEmpty) {
+                  if (_senha.isNotEmpty) {
+                    await UsuarioService.login(_nome, _senha).then(
+                      (usuario) {
+                        if (usuario != null) {
+                          Navigator.pushNamed(
+                            context,
+                            '/timeline',
+                            arguments: {
+                              'usuario': usuario,
+                            },
+                          );
+                          EasyLoading.showSuccess('Sucesso');
+                        } else {
+                          EasyLoading.showError('Nome/Senha invalido');
+                        }
+                      },
+                    );
+                  } else {
+                    EasyLoading.showError('Nome/Senha invalido');
+                  }
+                } else {
+                  EasyLoading.showError('Nome/Senha invalido');
+                }
+              },
             ),
             ButtonLogin(
               title: 'CADASTRAR',
-              onPress: () => Navigator.pushNamed(context, Rota.cadastro),
+              onPress: () => Navigator.pushNamed(context, '/cadastro'),
             )
           ],
         ),

@@ -1,11 +1,13 @@
 import 'package:anonymous_chat_flutter/core/cores_padroes.dart';
 import 'package:anonymous_chat_flutter/core/texto_padrao.dart';
+import 'package:anonymous_chat_flutter/model/postagem.dart';
 import 'package:flutter/material.dart';
 
 class CardPost extends StatelessWidget {
   String titulo;
   String subTitulo;
   String data;
+  Color cor;
   void Function() onPress;
 
   CardPost({
@@ -14,49 +16,39 @@ class CardPost extends StatelessWidget {
     @required this.subTitulo,
     @required this.onPress,
     @required this.data,
+    this.cor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Cores.backgroundCard,
-      child: Column(
-        children: [
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  this.titulo,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: TextPadrao.tituloCard,
-                    fontWeight: FontWeight.bold,
-                    color: Cores.textCard,
-                  ),
+    return GestureDetector(
+      onTap: () {
+        this.onPress();
+      },
+      child: Card(
+        color: cor != null ? cor : Cores.backgroundCard,
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(
+                this.titulo,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Cores.textCard,
                 ),
-                Text(data,
-                    style: TextStyle(
-                        fontSize: TextPadrao.textoCard,
-                        fontWeight: FontWeight.bold,
-                        color: Cores.textCard))
-              ],
-            ),
-            subtitle: Text(
-              this.subTitulo,
-              style: TextStyle(
-                fontSize: TextPadrao.textoCard,
-                color: Cores.textCard,
               ),
-            ),
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(onPressed: this.onPress, child: Text('VER MAIS'))
-            ],
-          )
-        ],
+              subtitle: Text(
+                this.subTitulo,
+                style: TextStyle(
+                  fontSize: TextPadrao.textoCard,
+                  color: Cores.textCard,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

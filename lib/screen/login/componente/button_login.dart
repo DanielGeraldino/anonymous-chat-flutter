@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ButtonLogin extends StatelessWidget {
   void Function() onPress;
   String title;
-  Color cor = Cores.backgroundButton;
+  Color cor;
 
   ButtonLogin({
     Key key,
@@ -21,7 +21,7 @@ class ButtonLogin extends StatelessWidget {
       height: 40,
       margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: cor,
+        color: Colors.green,
         borderRadius: BorderRadius.circular(5),
       ),
       child: ElevatedButton(

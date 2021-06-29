@@ -1,8 +1,12 @@
+import 'package:anonymous_chat_flutter/model/comentario.dart';
+import 'package:anonymous_chat_flutter/model/postagem.dart';
+import 'package:anonymous_chat_flutter/service/comentario_sevice.dart';
 import 'package:flutter/material.dart';
 import '../../core/cores_padroes.dart';
 
 class PostDetalheApp extends StatefulWidget {
-  const PostDetalheApp({Key key}) : super(key: key);
+  Postagem postagem;
+  PostDetalheApp({Key key, this.postagem}) : super(key: key);
 
   @override
   _PostDetalheState createState() => _PostDetalheState();
@@ -10,9 +14,20 @@ class PostDetalheApp extends StatefulWidget {
 
 class _PostDetalheState extends State<PostDetalheApp> {
   final controller = TextEditingController();
+  List<Comentario> comentarios = [];
+
+  void buscarComentario() async {
+    List<Comentario> lista =
+        await ComentarioService.listar('${widget.postagem.id}');
+    setState(() {
+      comentarios = lista;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    buscarComentario();
+
     return Scaffold(
       backgroundColor: Cores.background,
       appBar: AppBar(
@@ -32,9 +47,9 @@ class _PostDetalheState extends State<PostDetalheApp> {
                 color: Cores.backgroundCard,
                 borderRadius: BorderRadius.circular(5)),
             child: ListTile(
-              title: Text('Neque porro quisquam est'),
+              // title: Text('Neque porro quisquam est'),
               subtitle: Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a ex eget metus rutrum ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent maximus eu urna non mollis. Fusce dapibus turpis quis hendrerit iaculis. Aliquam vitae tortor nibh. Quisque maximus lobortis neque, quis semper mi sodales at. Integer vitae malesuada turpis. Aenean dignissim, tortor a aliquam volutpat, nunc quam dignissim neque, non facilisis ex urna ut lacus. Praesent volutpat tincidunt nulla, vitae laoreet massa ornare et. Suspendisse laoreet eleifend massa, et scelerisque eros tempus nec. Etiam porttitor orci ac tortor tristique accumsan. Vestibulum vel dui volutpat, pretium urna.',
+                widget.postagem.descricao,
                 textAlign: TextAlign.justify,
               ),
             ),
@@ -49,24 +64,8 @@ class _PostDetalheState extends State<PostDetalheApp> {
             child: Column(
               children: [
                 Text('Comentarios: '),
-                Container(
-                  // width: double.maxFinite,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(color: Cores.backgroundComeent),
-                  child: Row(
-                    children: [
-                      CircleAvatar(radius: 30),
-                      SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a ex eget metus rutrum ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus. ',
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(fontSize: 14, color: Colors.black87),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                for (var comentario in comentarios)
+                  ComentarioWidget(descricao: comentario.textoComentario),
                 Container(
                     margin: EdgeInsets.all(5),
                     decoration: BoxDecoration(
@@ -76,11 +75,53 @@ class _PostDetalheState extends State<PostDetalheApp> {
                     child: TextFormField(
                       controller: controller,
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.send),
+                        suffixIcon: GestureDetector(
+                          child: Icon(Icons.send),
+                          onTap: () async {
+                            var descricao = controller.text;
+                            if (descricao.isNotEmpty) {
+                              await ComentarioService.criar(
+                                      descricao, '${widget.postagem.id}')
+                                  .whenComplete(() {
+                                buscarComentario();
+                                controller.text = "";
+                              });
+                            }
+                          },
+                        ),
                         hintText: 'Digite um comentario',
                       ),
                     )),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ComentarioWidget extends StatelessWidget {
+  String descricao;
+
+  ComentarioWidget({Key key, this.descricao}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // width: double.maxFinite,
+      margin: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(color: Cores.backgroundComeent),
+      child: Row(
+        children: [
+          CircleAvatar(radius: 30),
+          SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              descricao,
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 14, color: Colors.black87),
             ),
           ),
         ],

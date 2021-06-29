@@ -1,8 +1,8 @@
 import 'package:anonymous_chat_flutter/core/cores_padroes.dart';
 import 'package:anonymous_chat_flutter/core/rota.dart';
-import 'package:anonymous_chat_flutter/database/banco_api.dart';
 import 'package:anonymous_chat_flutter/screen/login/componente/button_login.dart';
 import 'package:anonymous_chat_flutter/screen/login/componente/campo_input_login.dart';
+import 'package:anonymous_chat_flutter/service/usuario_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -60,10 +60,11 @@ class Cadastro extends StatelessWidget {
                   if (_nome.isNotEmpty) {
                     if (_senha.isNotEmpty) {
                       if (_email.isNotEmpty) {
-                        await Api.cadastrarUsuario(controlNome.text,
-                                controlSenha.text, controlEmail.text)
-                            .whenComplete(() => Navigator.popUntil(
-                                context, ModalRoute.withName(Rota.login)));
+                        await UsuarioService.cadastrar(
+                          nome: _nome,
+                          email: _email,
+                          senha: _senha,
+                        ).whenComplete(() => Navigator.pop(context));
                         EasyLoading.showSuccess('Usuario cadastrado');
                       } else {
                         EasyLoading.showError('Informe o email');

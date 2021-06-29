@@ -1,13 +1,16 @@
 import 'package:anonymous_chat_flutter/core/cores_padroes.dart';
 import 'package:anonymous_chat_flutter/core/rota.dart';
 import 'package:anonymous_chat_flutter/model/postagem.dart';
+import 'package:anonymous_chat_flutter/model/usuario.dart';
 import 'package:anonymous_chat_flutter/screen/timeline/componente/app_bar.dart';
 import 'package:anonymous_chat_flutter/screen/timeline/componente/card_post.dart';
 import 'package:anonymous_chat_flutter/service/postagem_service.dart';
 import 'package:flutter/material.dart';
 
 class TimelineApp extends StatefulWidget {
-  const TimelineApp({Key key}) : super(key: key);
+  Usuario usuario;
+
+  TimelineApp({Key key, this.usuario}) : super(key: key);
 
   @override
   _TimelineAppState createState() => _TimelineAppState();
@@ -16,17 +19,6 @@ class TimelineApp extends StatefulWidget {
 class _TimelineAppState extends State<TimelineApp> {
   List<Postagem> _listaPostagem = [];
   bool _buscar = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    Future.doWhile(() async {
-      buscarPostagens();
-      await Future.delayed(Duration(minutes: 1));
-      return _buscar;
-    });
-  }
 
   void buscarPostagens() async {
     var lista = await PostagemService.listar();
@@ -37,24 +29,36 @@ class _TimelineAppState extends State<TimelineApp> {
 
   @override
   Widget build(BuildContext context) {
+    buscarPostagens();
+
     return Scaffold(
       backgroundColor: Cores.background,
       appBar: AppBarTimeLine(
-        nameUser: 'DANIEL GERALDINO GUERRA',
+        nameUser: widget.usuario.nome,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, Rota.cadastroPostagem),
+        onPressed: () => Navigator.pushNamed(
+          context,
+          '/cadastro_postagem',
+          arguments: {'idUsuario': widget.usuario.id},
+        ),
         child: Icon(Icons.add),
       ),
       body: ListView(
         children: [
           for (var postagem in _listaPostagem)
             CardPost(
-              titulo: 'titulo',
+              titulo: '${postagem.dataHora}',
               subTitulo: postagem.descricao,
-              data: '',
-              onPress: () =>
-                  {Navigator.pushNamed(context, Rota.detalhePublica)},
+              onPress: () => {
+                Navigator.pushNamed(
+                  context,
+                  '/postagem',
+                  arguments: {
+                    'postagem': postagem,
+                  },
+                ),
+              },
             )
         ],
       ),

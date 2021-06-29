@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class CadastrarPostagem extends StatefulWidget {
-  const CadastrarPostagem({Key key}) : super(key: key);
+  String idUsuario;
+  CadastrarPostagem({this.idUsuario});
 
   @override
   _CadastrarPostagemState createState() => _CadastrarPostagemState();
@@ -17,72 +18,53 @@ class _CadastrarPostagemState extends State<CadastrarPostagem> {
     final tituloController = TextEditingController();
     final decricaoController = TextEditingController();
 
-    var _selectedIndex = 2;
-
-    void _onItemTapped(int index) async {
-      setState(() {
-        _selectedIndex = index;
-      });
-
-      if (index == 2) {
-        String titulo = tituloController.text;
-        String descricao = decricaoController.text;
-        EasyLoading.show(status: 'Salvando');
-        await PostagemService.cadastrar(titulo, descricao, '1').then((value) {
-          if (value) {
-            EasyLoading.showSuccess('Postagem salva com sucesso');
-            Navigator.pop(context);
-          } else {
-            EasyLoading.showError('Falha ao salvar postagem');
-          }
-        });
-      }
-    }
-
     return Scaffold(
       backgroundColor: Cores.background,
       appBar: AppBar(
         backgroundColor: Cores.backgroundAppBar,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.cancel),
-            label: 'Cancelar',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.image),
-            label: 'Imagem',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.save),
-            label: 'Cadastrar',
-            backgroundColor: Colors.green,
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        // selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.save),
+        onPressed: () async {
+          EasyLoading.show(status: 'Salvando postagem');
+          if (decricaoController.text.isNotEmpty) {
+            await PostagemService.cadastrar(
+              decricaoController.text,
+              widget.idUsuario,
+            ).then((value) {
+              if (value) {
+                EasyLoading.showSuccess('Salvo!');
+                Navigator.pop(context);
+              } else {
+                EasyLoading.showError("Falha ao salvar");
+              }
+            });
+          } else {
+            EasyLoading.showError('Favor escrever a postagem');
+          }
+        },
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 5),
-              color: Cores.backgroudtextInput,
-              child: TextFormField(
-                controller: tituloController,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  hintText: 'Informe o titulo',
-                  labelText: 'Informe o titulo',
-                  border: InputBorder.none,
-                ),
-              ),
+            // Container(
+            //   margin: EdgeInsets.symmetric(vertical: 5),
+            //   color: Cores.backgroudtextInput,
+            //   child: TextFormField(
+            //     controller: tituloController,
+            //     decoration: InputDecoration(
+            //       contentPadding:
+            //           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            //       hintText: 'Informe o titulo',
+            //       labelText: 'Informe o titulo',
+            //       border: InputBorder.none,
+            //     ),
+            //   ),
+            // ),
+            SizedBox(
+              height: 10,
             ),
             Container(
               color: Cores.backgroudtextInput,

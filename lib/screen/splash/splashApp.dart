@@ -14,7 +14,7 @@ class _SplashAppState extends State<SplashApp> {
   @override
   void initState() {
     Future.delayed(Duration(seconds: 5)).whenComplete(
-      () => Navigator.pushNamed(context, Rota.login),
+      () => Navigator.pushNamed(context, '/login'),
     );
   }
 
