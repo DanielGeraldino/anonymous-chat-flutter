@@ -37,7 +37,7 @@ class _PostDetalheState extends State<PostDetalheApp> {
           onTap: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
+      body: ListView(
         children: [
           Container(
             width: double.infinity,

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 class UsuarioService {
   static Future<Usuario> login(String nome, String senha) async {
     Usuario usuario = await Api.autenticaUsuario(nome, senha);
+
     return usuario;
   }
 

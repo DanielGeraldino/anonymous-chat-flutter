@@ -49,10 +49,13 @@ class Api {
     ).then((response) {
       if (response.statusCode == 200) {
         var dados = json.decode(response.body);
+        print(dados['status']);
+        print(dados['objectsReturn']);
         if (dados['status'] as bool) {
           usuario = Usuario.fromJson(dados['objectsReturn']);
+        } else {
+          usuario = null;
         }
-        usuario = null;
       } else {
         print('Erro login: ${response.statusCode}');
         usuario = null;

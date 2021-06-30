@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:anonymous_chat_flutter/screen/cadastrar_post/cadastrar_postagem.dart';
 import 'package:anonymous_chat_flutter/screen/cadastro/cadastrar.dart';
 import 'package:anonymous_chat_flutter/screen/login/login.dart';
